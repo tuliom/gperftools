@@ -81,6 +81,14 @@ extern "C" {
   void* __libc_valloc(size_t size)                ALIAS(tc_valloc);
   void* __libc_pvalloc(size_t size)               ALIAS(tc_pvalloc);
   int __posix_memalign(void** r, size_t a, size_t s)  ALIAS(tc_posix_memalign);
+  // __malloc_fork_* are required since glibc 2.24.  However, they aren't
+  // useful for tcmalloc.
+  static void __attribute__ ((used)) glibc_malloc_fork() {
+    return;
+  }
+  void __malloc_fork_lock_parent()     ALIAS(glibc_malloc_fork);
+  void __malloc_fork_unlock_child()    ALIAS(glibc_malloc_fork);
+  void __malloc_fork_unlock_parent()   ALIAS(glibc_malloc_fork);
 }   // extern "C"
 #undef ALIAS
 
